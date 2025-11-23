@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Activity, AlertCircle, Info } from "lucide-react"
+import { Activity, AlertCircle, Info, ArrowRight } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -71,7 +71,17 @@ export default function SignupPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="flex flex-col gap-2">
+                  <span>{error}</span>
+                  {error === "User already exists" && (
+                    <Link
+                      href="/login"
+                      className="flex items-center font-medium underline underline-offset-4 hover:text-white/90"
+                    >
+                      Sign in instead <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
+                  )}
+                </AlertDescription>
               </Alert>
             )}
             <div className="space-y-2">

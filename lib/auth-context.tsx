@@ -49,15 +49,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const usersStr = localStorage.getItem(MOCK_USERS_KEY) || "[]"
     const users = JSON.parse(usersStr)
 
+    const normalizedEmail = email.toLowerCase().trim()
+
     // Check if user already exists
-    if (users.find((u: any) => u.email === email)) {
+    if (users.find((u: any) => u.email === normalizedEmail)) {
       throw new Error("User already exists")
     }
 
     // Create new user
     const newUser: User = {
       id: `user_${Date.now()}`,
-      email,
+      email: normalizedEmail, // store normalized email
       name,
       role,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -78,7 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const usersStr = localStorage.getItem(MOCK_USERS_KEY) || "[]"
     const users = JSON.parse(usersStr)
 
-    const foundUser = users.find((u: any) => u.email === email && u.password === password)
+    const normalizedEmail = email.toLowerCase().trim()
+    const foundUser = users.find((u: any) => u.email === normalizedEmail && u.password === password)
 
     if (!foundUser) {
       throw new Error("Invalid credentials")
