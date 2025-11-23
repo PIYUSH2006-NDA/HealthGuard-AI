@@ -40,7 +40,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedUser = localStorage.getItem(CURRENT_USER_KEY)
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
         setIsAuthenticated(true)
       } catch (e) {
         console.error("Failed to parse user data", e)
@@ -55,12 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let users: any[] = []
     try {
       users = JSON.parse(usersStr)
+      if (!Array.isArray(users)) users = []
     } catch (e) {
-      console.error("Failed to parse users list", e)
+      console.error("[v0] Failed to parse users list during signup", e)
       users = []
     }
 
     const normalizedEmail = email.toLowerCase().trim()
+    console.log("[v0] Auth Debug: Signing up", normalizedEmail)
 
     // Check if user already exists
     if (users.find((u: any) => u.email === normalizedEmail)) {
@@ -80,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Store password separately (in production, hash this!)
     users.push({ ...newUser, password })
     localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users))
+    console.log("[v0] Auth Debug: User created", normalizedEmail)
 
     // Set as current user
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser))
@@ -92,18 +96,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let users: any[] = []
     try {
       users = JSON.parse(usersStr)
+      if (!Array.isArray(users)) users = []
     } catch (e) {
-      console.error("Failed to parse users list", e)
+      console.error("[v0] Failed to parse users list during login", e)
       users = []
     }
 
     const normalizedEmail = email.toLowerCase().trim()
-    const foundUser = users.find((u: any) => u.email === normalizedEmail && u.password === password)
+    console.log("[v0] Auth Debug: Attempting login for", email)
+    console.log("[v0] Auth Debug: Normalized email:", normalizedEmail)
+    console.log("[v0] Auth Debug: Total users in storage:", users.length)
+
+    const foundUser = users.find((u: any) => u.email === normalizedEmail)
 
     if (!foundUser) {
-      throw new Error("Invalid credentials")
+      console.warn("[v0] Auth Debug: Email not found")
+      throw new Error("Email not found")
     }
 
+    if (foundUser.password !== password) {
+      console.warn("[v0] Auth Debug: Password mismatch")
+      throw new Error("Incorrect password")
+    }
+
+    console.log("[v0] Auth Debug: Login successful")
     const { password: _, ...userWithoutPassword } = foundUser
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword))
     setUser(userWithoutPassword)
@@ -128,8 +144,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let users: any[] = []
     try {
       users = JSON.parse(usersStr)
+      if (!Array.isArray(users)) users = []
     } catch (e) {
-      console.error("Failed to parse users list", e)
+      console.error("Failed to parse users list during update", e)
       users = []
     }
 

@@ -183,7 +183,7 @@ export default function DashboardPage() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="mailto:support@medibuddy.com" className="cursor-pointer">
+                  <Link href="/contact" className="cursor-pointer">
                     <HelpCircle className="mr-2 h-4 w-4" />
                     Contact Support
                   </Link>
