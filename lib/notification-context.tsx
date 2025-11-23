@@ -60,14 +60,30 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
     const storedNotifications = localStorage.getItem(NOTIFICATIONS_KEY)
     if (storedNotifications) {
-      const allNotifications = JSON.parse(storedNotifications)
-      setNotifications(allNotifications.filter((n: Notification) => n.userId === user.id))
+      try {
+        const allNotifications = JSON.parse(storedNotifications)
+        if (Array.isArray(allNotifications)) {
+          setNotifications(allNotifications.filter((n: Notification) => n.userId === user.id))
+        } else {
+          setNotifications([])
+        }
+      } catch (error) {
+        console.error("Failed to parse notifications:", error)
+        setNotifications([])
+      }
     }
   }, [user])
 
   const saveNotifications = (notifs: Notification[]) => {
     const storedNotifications = localStorage.getItem(NOTIFICATIONS_KEY)
-    const allNotifications = storedNotifications ? JSON.parse(storedNotifications) : []
+    let allNotifications: Notification[] = []
+    try {
+      allNotifications = storedNotifications ? JSON.parse(storedNotifications) : []
+      if (!Array.isArray(allNotifications)) allNotifications = []
+    } catch (error) {
+      console.error("Failed to parse stored notifications:", error)
+      allNotifications = []
+    }
 
     const otherUserNotifications = allNotifications.filter((n: Notification) => n.userId !== user?.id)
     const updatedNotifications = [...otherUserNotifications, ...notifs]

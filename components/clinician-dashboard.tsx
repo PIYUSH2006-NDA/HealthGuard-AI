@@ -40,14 +40,15 @@ export function ClinicianDashboard() {
   const [newNote, setNewNote] = useState("")
   const { toast } = useToast()
 
-  const filteredPatients = patients.filter(
+  const safePatients = Array.isArray(patients) ? patients : []
+  const filteredPatients = safePatients.filter(
     (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.email.toLowerCase().includes(searchTerm.toLowerCase()),
+      (p?.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (p?.email?.toLowerCase() || "").includes(searchTerm.toLowerCase()),
   )
 
-  const highRiskPatients = patients.filter((p) => p.riskLevel === "high")
-  const mediumRiskPatients = patients.filter((p) => p.riskLevel === "medium")
+  const highRiskPatients = safePatients.filter((p) => p.riskLevel === "high")
+  const mediumRiskPatients = safePatients.filter((p) => p.riskLevel === "medium")
 
   const handleAddNote = () => {
     if (!selectedPatient || !newNote.trim()) return
@@ -67,6 +68,8 @@ export function ClinicianDashboard() {
     setIsNoteDialogOpen(false)
   }
 
+  const safeEvents = Array.isArray(events) ? events : []
+
   return (
     <div className="space-y-8">
       {/* Stats Overview */}
@@ -78,7 +81,7 @@ export function ClinicianDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Total Patients</p>
-              <h3 className="text-2xl font-bold">{patients.length}</h3>
+              <h3 className="text-2xl font-bold">{safePatients.length}</h3>
             </div>
           </CardContent>
         </Card>
@@ -113,7 +116,7 @@ export function ClinicianDashboard() {
               <p className="text-sm font-medium text-muted-foreground">New Reports</p>
               <h3 className="text-2xl font-bold">
                 {
-                  events.filter(
+                  safeEvents.filter(
                     (e) =>
                       e.type === "symptom_report" && new Date(e.timestamp) > new Date(Date.now() - 24 * 60 * 60 * 1000),
                   ).length
@@ -137,7 +140,7 @@ export function ClinicianDashboard() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search patients..."
-                  className="pl-8 w-[200px] or w-full"
+                  className="pl-8 w-full md:w-[200px]"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -157,11 +160,13 @@ export function ClinicianDashboard() {
                   <div className="flex items-center gap-4">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={`/generic-placeholder-graphic.png?height=40&width=40`} />
-                      <AvatarFallback>{patient.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback>{(patient.name || "U").charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium">{patient.name}</div>
-                      <div className="text-sm text-muted-foreground">{patient.conditions.join(", ")}</div>
+                      <div className="font-medium">{patient.name || "Unknown Patient"}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {Array.isArray(patient.conditions) ? patient.conditions.join(", ") : ""}
+                      </div>
                     </div>
                   </div>
 
@@ -244,8 +249,8 @@ export function ClinicianDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {events.slice(0, 5).map((event) => {
-                  const patient = patients.find((p) => p.id === event.patientId)
+                {safeEvents.slice(0, 5).map((event) => {
+                  const patient = safePatients.find((p) => p.id === event.patientId)
                   return (
                     <div key={event.id} className="flex gap-3">
                       <div

@@ -41,14 +41,30 @@ export function ReminderProvider({ children }: { children: ReactNode }) {
 
     const storedReminders = localStorage.getItem(REMINDERS_KEY)
     if (storedReminders) {
-      const allReminders = JSON.parse(storedReminders)
-      setReminders(allReminders.filter((r: Reminder) => r.userId === user.id))
+      try {
+        const allReminders = JSON.parse(storedReminders)
+        if (Array.isArray(allReminders)) {
+          setReminders(allReminders.filter((r: Reminder) => r.userId === user.id))
+        } else {
+          setReminders([])
+        }
+      } catch (error) {
+        console.error("Failed to parse reminders:", error)
+        setReminders([])
+      }
     }
   }, [user])
 
   const saveReminders = (rems: Reminder[]) => {
     const storedReminders = localStorage.getItem(REMINDERS_KEY)
-    const allReminders = storedReminders ? JSON.parse(storedReminders) : []
+    let allReminders: Reminder[] = []
+    try {
+      allReminders = storedReminders ? JSON.parse(storedReminders) : []
+      if (!Array.isArray(allReminders)) allReminders = []
+    } catch (error) {
+      console.error("Failed to parse stored reminders:", error)
+      allReminders = []
+    }
 
     const otherUserReminders = allReminders.filter((r: Reminder) => r.userId !== user?.id)
     const updatedReminders = [...otherUserReminders, ...rems]

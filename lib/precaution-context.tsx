@@ -67,7 +67,17 @@ export function PrecautionProvider({ children }: { children: ReactNode }) {
 
     const storedPrecautions = localStorage.getItem(PRECAUTIONS_KEY)
     if (storedPrecautions) {
-      setPrecautions(JSON.parse(storedPrecautions))
+      try {
+        const parsedPrecautions = JSON.parse(storedPrecautions)
+        if (Array.isArray(parsedPrecautions)) {
+          setPrecautions(parsedPrecautions)
+        } else {
+          setPrecautions([])
+        }
+      } catch (error) {
+        console.error("Failed to parse precautions:", error)
+        setPrecautions([])
+      }
     } else {
       // Initialize with some defaults for existing medications if empty
       const initialPrecautions: Precaution[] = []

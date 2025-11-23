@@ -87,20 +87,45 @@ export function SymptomProvider({ children }: { children: ReactNode }) {
 
     const storedSymptoms = localStorage.getItem(SYMPTOMS_KEY)
     if (storedSymptoms) {
-      const allSymptoms = JSON.parse(storedSymptoms)
-      setSymptoms(allSymptoms.filter((s: Symptom) => s.userId === user.id))
+      try {
+        const allSymptoms = JSON.parse(storedSymptoms)
+        if (Array.isArray(allSymptoms)) {
+          setSymptoms(allSymptoms.filter((s: Symptom) => s.userId === user.id))
+        } else {
+          setSymptoms([])
+        }
+      } catch (error) {
+        console.error("Failed to parse symptoms:", error)
+        setSymptoms([])
+      }
     }
 
     const storedTickets = localStorage.getItem(TICKETS_KEY)
     if (storedTickets) {
-      const allTickets = JSON.parse(storedTickets)
-      setTickets(allTickets.filter((t: AdviceTicket) => t.userId === user.id || user.role === "clinician"))
+      try {
+        const allTickets = JSON.parse(storedTickets)
+        if (Array.isArray(allTickets)) {
+          setTickets(allTickets.filter((t: AdviceTicket) => t.userId === user.id || user.role === "clinician"))
+        } else {
+          setTickets([])
+        }
+      } catch (error) {
+        console.error("Failed to parse tickets:", error)
+        setTickets([])
+      }
     }
   }, [user])
 
   const saveSymptoms = (symp: Symptom[]) => {
     const storedSymptoms = localStorage.getItem(SYMPTOMS_KEY)
-    const allSymptoms = storedSymptoms ? JSON.parse(storedSymptoms) : []
+    let allSymptoms: Symptom[] = []
+    try {
+      allSymptoms = storedSymptoms ? JSON.parse(storedSymptoms) : []
+      if (!Array.isArray(allSymptoms)) allSymptoms = []
+    } catch (error) {
+      console.error("Failed to parse stored symptoms:", error)
+      allSymptoms = []
+    }
 
     const otherUserSymptoms = allSymptoms.filter((s: Symptom) => s.userId !== user?.id)
     const updatedSymptoms = [...otherUserSymptoms, ...symp]
@@ -111,7 +136,14 @@ export function SymptomProvider({ children }: { children: ReactNode }) {
 
   const saveTickets = (tix: AdviceTicket[]) => {
     const storedTickets = localStorage.getItem(TICKETS_KEY)
-    const allTickets = storedTickets ? JSON.parse(storedTickets) : []
+    let allTickets: AdviceTicket[] = []
+    try {
+      allTickets = storedTickets ? JSON.parse(storedTickets) : []
+      if (!Array.isArray(allTickets)) allTickets = []
+    } catch (error) {
+      console.error("Failed to parse stored tickets:", error)
+      allTickets = []
+    }
 
     const otherUserTickets = allTickets.filter((t: AdviceTicket) => t.userId !== user?.id)
     const updatedTickets = [...otherUserTickets, ...tix]

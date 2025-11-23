@@ -73,10 +73,18 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     const savedAchievements = localStorage.getItem("medibuddy_achievements")
 
     if (savedStreak) {
-      setStreakData(JSON.parse(savedStreak))
+      try {
+        setStreakData(JSON.parse(savedStreak))
+      } catch (e) {
+        console.error("Failed to parse streak data", e)
+      }
     }
     if (savedAchievements) {
-      setAchievements(JSON.parse(savedAchievements))
+      try {
+        setAchievements(JSON.parse(savedAchievements))
+      } catch (e) {
+        console.error("Failed to parse achievements data", e)
+      }
     }
   }, [])
 

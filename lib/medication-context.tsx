@@ -66,14 +66,30 @@ export function MedicationProvider({ children }: { children: ReactNode }) {
 
     const storedMeds = localStorage.getItem(MEDICATIONS_KEY)
     if (storedMeds) {
-      const allMeds = JSON.parse(storedMeds)
-      setMedications(allMeds.filter((m: Medication) => m.userId === user.id))
+      try {
+        const allMeds = JSON.parse(storedMeds)
+        if (Array.isArray(allMeds)) {
+          setMedications(allMeds.filter((m: Medication) => m.userId === user.id))
+        } else {
+          setMedications([])
+        }
+      } catch (error) {
+        console.error("Failed to parse medications:", error)
+        setMedications([])
+      }
     }
   }, [user])
 
   const saveMedications = (meds: Medication[]) => {
     const storedMeds = localStorage.getItem(MEDICATIONS_KEY)
-    const allMeds = storedMeds ? JSON.parse(storedMeds) : []
+    let allMeds: Medication[] = []
+    try {
+      allMeds = storedMeds ? JSON.parse(storedMeds) : []
+      if (!Array.isArray(allMeds)) allMeds = []
+    } catch (error) {
+      console.error("Failed to parse stored medications:", error)
+      allMeds = []
+    }
 
     // Remove old meds for this user and add new ones
     const otherUserMeds = allMeds.filter((m: Medication) => m.userId !== user?.id)

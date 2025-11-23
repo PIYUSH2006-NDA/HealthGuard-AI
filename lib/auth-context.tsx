@@ -39,15 +39,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedUser = localStorage.getItem(CURRENT_USER_KEY)
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
-      setIsAuthenticated(true)
+      try {
+        setUser(JSON.parse(storedUser))
+        setIsAuthenticated(true)
+      } catch (e) {
+        console.error("Failed to parse user data", e)
+        localStorage.removeItem(CURRENT_USER_KEY)
+      }
     }
   }, [])
 
   const signup = async (email: string, password: string, name: string, role: UserRole) => {
     // Get existing users
     const usersStr = localStorage.getItem(MOCK_USERS_KEY) || "[]"
-    const users = JSON.parse(usersStr)
+    let users: any[] = []
+    try {
+      users = JSON.parse(usersStr)
+    } catch (e) {
+      console.error("Failed to parse users list", e)
+      users = []
+    }
 
     const normalizedEmail = email.toLowerCase().trim()
 
@@ -78,7 +89,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const usersStr = localStorage.getItem(MOCK_USERS_KEY) || "[]"
-    const users = JSON.parse(usersStr)
+    let users: any[] = []
+    try {
+      users = JSON.parse(usersStr)
+    } catch (e) {
+      console.error("Failed to parse users list", e)
+      users = []
+    }
 
     const normalizedEmail = email.toLowerCase().trim()
     const foundUser = users.find((u: any) => u.email === normalizedEmail && u.password === password)
@@ -108,7 +125,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Update in users list too
     const usersStr = localStorage.getItem(MOCK_USERS_KEY) || "[]"
-    const users = JSON.parse(usersStr)
+    let users: any[] = []
+    try {
+      users = JSON.parse(usersStr)
+    } catch (e) {
+      console.error("Failed to parse users list", e)
+      users = []
+    }
+
     const userIndex = users.findIndex((u: any) => u.id === user.id)
     if (userIndex !== -1) {
       users[userIndex] = { ...users[userIndex], ...updates }

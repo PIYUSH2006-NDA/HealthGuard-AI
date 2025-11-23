@@ -156,7 +156,12 @@ export function ClinicianProvider({ children }: { children: ReactNode }) {
     // Load or initialize demo data
     const storedPatients = localStorage.getItem(PATIENTS_KEY)
     if (storedPatients) {
-      setPatients(JSON.parse(storedPatients))
+      try {
+        setPatients(JSON.parse(storedPatients))
+      } catch (e) {
+        console.error("Failed to parse patients data", e)
+        setPatients(DEMO_PATIENTS)
+      }
     } else {
       localStorage.setItem(PATIENTS_KEY, JSON.stringify(DEMO_PATIENTS))
       setPatients(DEMO_PATIENTS)
@@ -164,7 +169,12 @@ export function ClinicianProvider({ children }: { children: ReactNode }) {
 
     const storedEvents = localStorage.getItem(EVENTS_KEY)
     if (storedEvents) {
-      setEvents(JSON.parse(storedEvents))
+      try {
+        setEvents(JSON.parse(storedEvents))
+      } catch (e) {
+        console.error("Failed to parse events data", e)
+        setEvents(DEMO_EVENTS)
+      }
     } else {
       localStorage.setItem(EVENTS_KEY, JSON.stringify(DEMO_EVENTS))
       setEvents(DEMO_EVENTS)
@@ -172,7 +182,12 @@ export function ClinicianProvider({ children }: { children: ReactNode }) {
 
     const storedNotes = localStorage.getItem(NOTES_KEY)
     if (storedNotes) {
-      setNotes(JSON.parse(storedNotes))
+      try {
+        setNotes(JSON.parse(storedNotes))
+      } catch (e) {
+        console.error("Failed to parse notes data", e)
+        setNotes([])
+      }
     }
   }, [user])
 
