@@ -1,0 +1,67 @@
+{
+  "aspirin": {
+    "name": "Aspirin",
+    "precautions": ["Take with food", "Do not combine with warfarin - bleeding risk", "Avoid alcohol"],
+    "dosage_by_age": {
+      "child": "Do not use - Reye's syndrome risk",
+      "adult": "75-150 mg daily for heart health, 300-900mg for pain",
+      "elderly": "Use lower range, consult doctor"
+    },
+    "purpose": "Pain relief, antiplatelet, anti-inflammatory",
+    "warnings": ["Bleeding risk", "Avoid with peptic ulcer", "Asthma sensitivity"],
+    "side_effects": ["Stomach pain", "Heartburn", "Nausea", "Bleeding more easily"],
+    "interactions": ["Warfarin", "Ibuprofen", "Alcohol", "Methotrexate"]
+  },
+  "ibuprofen": {
+    "name": "Ibuprofen",
+    "precautions": ["Take with food or milk", "Stay hydrated", "Avoid prolonged use"],
+    "dosage_by_age": {
+      "child": "5-10 mg/kg every 6-8 hours",
+      "adult": "200-400 mg every 4-6 hours",
+      "elderly": "Start low, monitor kidney function"
+    },
+    "purpose": "Pain relief, fever reducer, anti-inflammatory",
+    "warnings": ["Stomach bleeding risk", "Kidney stress", "May raise blood pressure"],
+    "side_effects": ["Upset stomach", "Dizziness", "Rash", "Ringing in ears"],
+    "interactions": ["Aspirin", "Blood pressure meds", "Lithium", "Steroids"]
+  },
+  "acetaminophen": {
+    "name": "Acetaminophen",
+    "precautions": ["Do not exceed 4000mg daily", "Check other meds for acetaminophen content"],
+    "dosage_by_age": {
+      "child": "10-15 mg/kg every 4-6 hours",
+      "adult": "325-1000 mg every 4-6 hours",
+      "elderly": "Max 3000mg daily recommended"
+    },
+    "purpose": "Pain relief, fever reducer",
+    "warnings": ["Liver damage risk with overdose", "Avoid alcohol"],
+    "side_effects": ["Nausea", "Stomach pain", "Loss of appetite", "Itching"],
+    "interactions": ["Alcohol", "Warfarin (high doses)", "Isoniazid"]
+  },
+  "amoxicillin": {
+    "name": "Amoxicillin",
+    "precautions": ["Finish full course", "Take at evenly spaced times", "Report rash immediately"],
+    "dosage_by_age": {
+      "child": "20-40 mg/kg/day divided",
+      "adult": "250-500 mg every 8 hours",
+      "elderly": "Adjust for kidney function"
+    },
+    "purpose": "Antibiotic (bacterial infections)",
+    "warnings": ["Allergy risk (Penicillin)", "Diarrhea common"],
+    "side_effects": ["Nausea", "Vomiting", "Diarrhea", "Rash"],
+    "interactions": ["Methotrexate", "Birth control pills (maybe)", "Probenecid"]
+  },
+  "lisinopril": {
+    "name": "Lisinopril",
+    "precautions": ["Avoid potassium supplements", "Stand up slowly (dizziness)", "Monitor blood pressure"],
+    "dosage_by_age": {
+      "child": "Consult specialist",
+      "adult": "10-40 mg daily",
+      "elderly": "Start low (2.5-5mg)"
+    },
+    "purpose": "Blood pressure control, heart failure",
+    "warnings": ["Dry cough", "Angioedema risk", "Do not use in pregnancy"],
+    "side_effects": ["Dizziness", "Dry cough", "Headache", "Fatigue"],
+    "interactions": ["Potassium supplements", "NSAIDs", "Lithium", "Diuretics"]
+  }
+}

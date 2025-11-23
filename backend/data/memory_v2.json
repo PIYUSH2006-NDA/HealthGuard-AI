@@ -1,0 +1,42 @@
+{
+  "patients": {
+    "patient_demo_001": {
+      "patient_id": "patient_demo_001",
+      "name": "Demo Patient",
+      "age": 68,
+      "medications": [
+        {
+          "name": "Aspirin",
+          "dosage": "81mg",
+          "frequency": "daily",
+          "time_slots": ["09:00"]
+        },
+        {
+          "name": "Metformin",
+          "dosage": "500mg",
+          "frequency": "twice daily",
+          "time_slots": ["08:00", "20:00"]
+        }
+      ],
+      "caregiver_contact": "demo_caregiver@example.com"
+    }
+  },
+  "events": [
+    {
+      "type": "dose",
+      "patient_id": "patient_demo_001",
+      "medication": "Aspirin",
+      "scheduled": true,
+      "taken": true,
+      "timestamp": "2024-01-15T09:00:00"
+    },
+    {
+      "type": "dose",
+      "patient_id": "patient_demo_001",
+      "medication": "Metformin",
+      "scheduled": true,
+      "taken": false,
+      "timestamp": "2024-01-15T08:00:00"
+    }
+  ]
+}

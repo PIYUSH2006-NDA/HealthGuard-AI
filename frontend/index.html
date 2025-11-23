@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBuddy v2 - Patient Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #667eea;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 13px;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 MediBuddy v2</h1>
+            <p>AI Multi-Agent Medication Adherence Assistant</p>
+        </div>
+        
+        <div class="content">
+            <div class="disclaimer">
+                <strong>⚠️ Disclaimer:</strong> This is an educational demo. Not a medical device. 
+                Always consult healthcare professionals for medical advice.
+            </div>
+            
+            <!-- Create Patient Section -->
+            <div class="section">
+                <h2>📋 Create Patient</h2>
+                <div class="form-group">
+                    <label>Patient ID:</label>
+                    <input type="text" id="patientId" value="patient_demo_001" />
+                </div>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="patientName" value="John Doe" />
+                </div>
+                <div class="form-group">
+                    <label>Age:</label>
+                    <input type="number" id="patientAge" value="65" />
+                </div>
+                <div class="form-group">
+                    <label>Medications (comma-separated):</label>
+                    <input type="text" id="medications" value="Aspirin, Warfarin" />
+                </div>
+                <div class="form-group">
+                    <label>Caregiver Contact:</label>
+                    <input type="text" id="caregiverContact" value="caregiver@example.com" />
+                </div>
+                <button onclick="createPatient()">Create Patient</button>
+                <div id="createResult"></div>
+            </div>
+            
+            <!-- Run Orchestration Section -->
+            <div class="section">
+                <h2>🤖 Run Orchestration</h2>
+                <div class="form-group">
+                    <label>Patient ID:</label>
+                    <input type="text" id="runPatientId" value="patient_demo_001" />
+                </div>
+                <div class="form-group">
+                    <label>Action:</label>
+                    <select id="action">
+                        <option value="full_check">Full Health Check</option>
+                        <option value="check_interactions">Check Interactions</option>
+                        <option value="schedule_reminders">Schedule Reminders</option>
+                        <option value="log_symptom">Log Symptom</option>
+                    </select>
+                </div>
+                <button onclick="runOrchestration()">Run</button>
+                <div id="runResult"></div>
+            </div>
+            
+            <!-- Get Summary Section -->
+            <div class="section">
+                <h2>📊 Clinician Summary</h2>
+                <div class="form-group">
+                    <label>Patient ID:</label>
+                    <input type="text" id="summaryPatientId" value="patient_demo_001" />
+                </div>
+                <button onclick="getSummary()">Get Summary</button>
+                <div id="summaryResult"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        async function createPatient() {
+            const resultDiv = document.getElementById('createResult');
+            resultDiv.innerHTML = '<div class="alert alert-success">Creating patient...</div>';
+            
+            const meds = document.getElementById('medications').value
+                .split(',')
+                .map(m => m.trim())
+                .filter(m => m)
+                .map(name => ({
+                    name,
+                    dosage: '1 tablet',
+                    frequency: 'daily',
+                    time_slots: ['09:00', '21:00']
+                }));
+            
+            const patient = {
+                patient_id: document.getElementById('patientId').value,
+                name: document.getElementById('patientName').value,
+                age: parseInt(document.getElementById('patientAge').value),
+                medications: meds,
+                caregiver_contact: document.getElementById('caregiverContact').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/patient`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(patient)
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="alert alert-success">✅ ${data.message}</div>
+                    <div class="result"><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function runOrchestration() {
+            const resultDiv = document.getElementById('runResult');
+            resultDiv.innerHTML = '<div class="alert alert-success">Running orchestration...</div>';
+            
+            const patientId = document.getElementById('runPatientId').value;
+            const action = document.getElementById('action').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/run/${patientId}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action})
+                });
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<div class="alert alert-success">✅ Orchestration complete</div>
+                    <div class="result"><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function getSummary() {
+            const resultDiv = document.getElementById('summaryResult');
+            resultDiv.innerHTML = '<div class="alert alert-success">Fetching summary...</div>';
+            
+            const patientId = document.getElementById('summaryPatientId').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/summary/${patientId}`);
+                const data = await response.json();
+                
+                let html = `<div class="alert alert-success">✅ Summary generated</div><div class="result">`;
+                html += `<h3>Patient: ${data.patient_name}</h3>`;
+                html += `<p><strong>Adherence Rate:</strong> ${data.adherence_rate}%</p>`;
+                html += `<p><strong>Doses:</strong> ${data.taken_doses}/${data.total_doses} taken</p>`;
+                
+                if (data.alerts && data.alerts.length > 0) {
+                    html += `<p><strong>Alerts:</strong></p><ul>`;
+                    data.alerts.forEach(alert => html += `<li>${alert}</li>`);
+                    html += `</ul>`;
+                }
+                
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                resultDiv.innerHTML = html;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
